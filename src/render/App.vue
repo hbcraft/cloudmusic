@@ -16,4 +16,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less">
+#app {
+  -webkit-user-select: none;
+}
 </style>

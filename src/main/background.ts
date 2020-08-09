@@ -3,77 +3,81 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import appIcon from './tray'
+import mainWindowIpc from './ipc/mainWindow'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+// 创建主窗口事件
 function createWindow() {
-  // Create the browser window.
+  // 设置窗口属性
   win = new BrowserWindow({
-    width: 1022,
-    minWidth: 1022,
-    height: 670,
-    minHeight: 670,
-    frame: false,
+    width: 1022, // 宽度
+    minWidth: 1022, // 最小宽度
+    height: 670, // 高度
+    minHeight: 670, // 最小高度
+    frame: false, // 无边框窗口
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: (process.env
-        .ELECTRON_NODE_INTEGRATION as unknown) as boolean
+      // 启用node集成
+      nodeIntegration: (process.env.ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+      // nodeIntegration: true
     }
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
+    // 在使用webpack-dev-server时使用url加载窗口内容
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
+    // 测试模式自动打开devtools
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
-    // Load the index.html when not in development
+    // 在非开发模式中使用文件加载
     win.loadURL('app://./index.html')
   }
 
-  win.on('closed', () => {
-    win = null
-  })
+  // 将主窗口对象传入系统托盘模块
+  appIcon(win)
+  // 将主窗口对象传入主窗口ipc模块
+  mainWindowIpc(win)
+
+  // 当主窗口关闭是清除窗口对象，因为本应用可以口泰运行，所以注释掉
+  // win.on('closed', () => {
+  //   win = null
+  // })
 }
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// 关闭所有窗口后退出。因为本应用可以口泰运行，所以注释掉
+// app.on('window-all-closed', () => {
+//   // On macOS it is common for applications and their menu bar
+//   // to stay active until the user quits explicitly with Cmd + Q
+//   if (process.platform !== 'darwin') {
+//     app.quit()
+//   }
+// })
 
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    createWindow()
-  }
-})
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// 当Electron准备完成时将调用此方法
+// 初始化并准备创建浏览器窗口
+// 有些API仅在此事件发生后才能使用。
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
+    // 安装 Vue Devtools
     try {
       await installExtension(VUEJS_DEVTOOLS)
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+      console.error('Vue Devtools安装失败:', e.toString())
     }
   }
+  // 创建窗口
   createWindow()
 })
 
