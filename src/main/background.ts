@@ -45,11 +45,6 @@ function createWindow() {
     win.loadURL('app://./index.html')
   }
 
-  // 将主窗口对象传入系统托盘模块
-  appIcon(win)
-  // 将主窗口对象传入主窗口ipc模块
-  mainWindowIpc(win)
-
   // 当主窗口关闭是清除窗口对象，因为本应用可以口泰运行，所以注释掉
   // win.on('closed', () => {
   //   win = null
@@ -79,6 +74,11 @@ app.on('ready', async () => {
   }
   // 创建窗口
   createWindow()
+
+  // 将主窗口对象传入系统托盘模块
+  appIcon(win as BrowserWindow)
+  // 将主窗口对象传入主窗口ipc模块
+  mainWindowIpc(win as BrowserWindow)
 })
 
 // Exit cleanly on request from parent process in development mode.

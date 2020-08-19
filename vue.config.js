@@ -17,7 +17,13 @@ module.exports = {
     },
     electronBuilder: {
       nodeIntegration: true, // 启用node集成
-      mainProcessFile: 'src/main/background.ts'
+      mainProcessFile: 'src/main/background.ts', // 入口文件
+      mainProcessWatch: ['src/main/**/*'], // 监听文件更改
+      builderOptions: { // electron-builder配置
+        files: [
+          '**/*'
+        ]
+      }
     }
   },
   // 配置webpack

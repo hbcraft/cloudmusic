@@ -1,5 +1,6 @@
 // 系统托盘菜单
 import { Tray, Menu, app, BrowserWindow } from 'electron'
+import { loadFile } from './common'
 // 菜单项
 let trayMenu: Menu = Menu.buildFromTemplate([
   {
@@ -11,7 +12,7 @@ let trayMenu: Menu = Menu.buildFromTemplate([
 ])
 export default function (win: BrowserWindow) {
   // 设置菜单图标
-  const appIcon = new Tray('public/favicon-small.ico')
+  const appIcon = new Tray(loadFile('favicon.ico'))
   // 设置鼠标指向托盘图标时显示的文字
   appIcon.setToolTip('网易云音乐')
   // 设置托盘右键菜单
