@@ -21,8 +21,14 @@ module.exports = {
       mainProcessWatch: ['src/main/**/*'], // 监听文件更改
       builderOptions: { // electron-builder配置
         files: [
-          '**/*'
-        ]
+          '**/*',
+          'icon.ico',
+          'icon-small.ico'
+        ],
+        icon: 'public/icon.ico',
+        win: {
+          icon: 'public/icon.ico'
+        }
       }
     }
   },
