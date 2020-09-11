@@ -20,6 +20,8 @@ module.exports = {
       mainProcessFile: 'src/main/background.ts', // 入口文件
       mainProcessWatch: ['src/main/**/*'], // 监听文件更改
       builderOptions: { // electron-builder配置
+        appId: 'cn.hbcraft.cloudmusic',
+        productName: '',
         files: [
           '**/*',
           'icon.ico',
@@ -28,6 +30,13 @@ module.exports = {
         icon: 'public/icon.ico',
         win: {
           icon: 'public/icon.ico'
+        },
+        nsis: {
+          oneClick: false,
+          perMachine: true,
+          allowToChangeInstallationDirectory: true,
+          uninstallDisplayName: '卸载网易云音乐',
+          shortcutName: '网易云音乐'
         }
       }
     }
