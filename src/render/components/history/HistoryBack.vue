@@ -4,14 +4,15 @@
   </a>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  methods: {
-    back (): void {
-      this.$store.commit('backHistory')
-      this.$router.back()
-    }
-  }
+<script lang='ts'>
+import { Component, Vue } from 'vue-property-decorator'
+@Component({
+  name: 'HistoryBack'
 })
+export default class HistoryBack extends Vue {
+  back (): void {
+    this.$store.commit('backHistory')
+    this.$router.back()
+  }
+}
 </script>

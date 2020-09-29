@@ -7,12 +7,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
 import Topbar from '@/components/Topbar.vue'
 import Player from '@/components/Player.vue'
-export default Vue.extend({
-  components: { Topbar, Player }
+
+@Component({
+  name: 'App',
+  components: {
+    Topbar,
+    Player
+  }
 })
+export default class App extends Vue {
+}
 </script>
 
 <style lang="less">

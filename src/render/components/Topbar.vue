@@ -3,22 +3,22 @@
     <div class="m-logo">
       <HistoryPush to="Discovery">
         <svg>
-          <use :xlink:href="topbarSvg+'#logo'" />
+          <use :xlink:href="topbarSvg + '#logo'" />
         </svg>
       </HistoryPush>
     </div>
     <div class="m-history">
       <HistoryBack>
-        <span class="btn btn-prv" :class="{dis:!canBack}">
+        <span class="btn btn-prv" :class="{ dis: !canBack }">
           <svg>
-            <use :xlink:href="topbarSvg+'#back'" />
+            <use :xlink:href="topbarSvg + '#back'" />
           </svg>
         </span>
       </HistoryBack>
       <HistoryForward>
-        <span class="btn btn-nxt" :class="{dis:!canForward}">
+        <span class="btn btn-nxt" :class="{ dis: !canForward }">
           <svg>
-            <use :xlink:href="topbarSvg+'#next'" />
+            <use :xlink:href="topbarSvg + '#next'" />
           </svg>
         </span>
       </HistoryForward>
@@ -27,7 +27,7 @@
       <input type="text" placeholder="搜索音乐，视频，歌词，电台" />
       <span class="search-btn">
         <svg>
-          <use :xlink:href="topbarSvg+'#search'" />
+          <use :xlink:href="topbarSvg + '#search'" />
         </svg>
       </span>
     </div>
@@ -35,22 +35,22 @@
       <span class="bar"></span>
       <span class="icn fix" title="mini模式">
         <svg class="svg">
-          <use :xlink:href="topbarSvg+'#mini'" />
+          <use :xlink:href="topbarSvg + '#mini'" />
         </svg>
       </span>
       <span class="icn min" title="最小化" @click="minimized">
         <svg class="svg">
-          <use :xlink:href="topbarSvg+'#zoomout'" />
+          <use :xlink:href="topbarSvg + '#zoomout'" />
         </svg>
       </span>
       <span class="icn revert" title="最大化" @click="maximized">
         <svg class="svg">
-          <use :xlink:href="topbarSvg+'#'+isMaximized" />
+          <use :xlink:href="topbarSvg + '#' + isMaximized" />
         </svg>
       </span>
       <span class="icn cls" title="关闭" @click="winClose">
         <svg class="svg">
-          <use :xlink:href="topbarSvg+'#close'" />
+          <use :xlink:href="topbarSvg + '#close'" />
         </svg>
       </span>
     </div>
@@ -58,52 +58,52 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+// TODO 把自定义历史记录组件替换为electron的是否可后退、前进方法
+import { Vue, Component } from 'vue-property-decorator'
 import { ipcRenderer, IpcRendererEvent } from 'electron'
-/**
- * @todo 窗口最大化后改变图标
- */
-export default Vue.extend({
-  data () {
-    return {
-      // 最大化按钮的状态zoomin：最大化，restore：还原
-      isMaximized: 'zoomin',
-      // topbar SVG资源
-      topbarSvg: require('@/assets/svg/topbar/topbar.sp.svg')
-    }
-  },
-  computed: {
-    // 是否可以前进
-    canForward () {
-      return this.$store.state.history.canForward
-    },
-    // 是否可以后退
-    canBack () {
-      return this.$store.state.history.canBack
-    }
-  },
-  methods: {
-    // 关闭
-    winClose () {
-      // 后台运行，所以是隐藏
-      ipcRenderer.send('hide')
-    },
-    // 最小化
-    minimized () {
-      ipcRenderer.send('minimized')
-    },
-    // 最大化
-    maximized () {
-      ipcRenderer.send('maximized')
-    }
-  },
+
+@Component({
+  name: 'Topbar'
+})
+export default class Topbar extends Vue {
+  // 最大化按钮的状态zoomin：最大化，restore：还原
+  isMaximized = 'zoomin'
+  // topbar SVG资源
+  topbarSvg = require('@/assets/svg/topbar/topbar.sp.svg')
+
+  // 是否可以前进
+  get canForward () {
+    return this.$store.state.history.canForward
+  }
+
+  // 是否可以后退
+  get canBack () {
+    return this.$store.state.history.canBack
+  }
+
+  // 关闭
+  winClose () {
+    // 后台运行，所以是隐藏
+    ipcRenderer.send('hide')
+  }
+
+  // 最小化
+  minimized () {
+    ipcRenderer.send('minimized')
+  }
+
+  // 最大化
+  maximized () {
+    ipcRenderer.send('maximized')
+  }
+
   mounted () {
     // 页面最大化时改变最大化的按钮
     ipcRenderer.on('isMaximized', (e: IpcRendererEvent, v: boolean) => {
       this.isMaximized = v ? 'restore' : 'zoomin'
     })
   }
-})
+}
 </script>
 
 <style lang="less">

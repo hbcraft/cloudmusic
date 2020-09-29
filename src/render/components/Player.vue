@@ -2,10 +2,12 @@
   <div id="player"></div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
+<script lang='ts'>
+import { Component, Vue } from 'vue-property-decorator'
+@Component({
+  name: 'Player'
 })
+export default class Player extends Vue { }
 </script>
 
 <style lang="less">

@@ -26,7 +26,7 @@ const router = new VueRouter({
   routes
 })
 router.onReady(() => {
-  store.commit('pushHistory', (router as any).history.current.name)
+  store.commit('pushHistory', router.history.current.name)
 })
 
 export default router

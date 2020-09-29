@@ -1,11 +1,13 @@
 <template>
-  <div>发现音乐</div>
+  <div></div>
 </template>
 
-<script>
-export default {
-
-}
+<script lang='ts'>
+import { Component, Vue } from 'vue-property-decorator'
+@Component({
+  name: 'Discovery'
+})
+export default class Discovery extends Vue { }
 </script>
 
 <style>
